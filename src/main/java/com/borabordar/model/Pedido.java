@@ -67,6 +67,19 @@ public class Pedido {
         this.status = novoStatus;
     }
 
+    public void cancelar(){
+        if(this.status == StatusPedido.FINALIZADO){
+            throw new RuntimeException("Pedido já finalizado não pode ser cancelado");
+        }
+        if(this.status == StatusPedido.CANCELADO){
+            throw new RuntimeException("Pedido já está cancelado");
+        }
+        if(this.status != StatusPedido.PENDENTE){
+            throw new RuntimeException("Somente pedidos pendentes podem ser cancelados");
+        }
+        this.status = StatusPedido.CANCELADO;
+    }
+
 
     @Override
     public String toString() {

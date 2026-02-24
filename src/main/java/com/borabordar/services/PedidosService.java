@@ -11,11 +11,11 @@ public class PedidosService {
 
     private PedidoRepository repository = new PedidoRepository();
 
-    public Pedido criarPedido(Cliente cliente, String descricao, double valor){
-        if(descricao == null || descricao.trim().isEmpty()){
+    public Pedido criarPedido(Cliente cliente, String descricao, double valor) {
+        if (descricao == null || descricao.trim().isEmpty()) {
             throw new RuntimeException("Descrição de pedido não pode ser vazia");
         }
-        if(valor <= 0){
+        if (valor <= 0) {
             throw new RuntimeException("Valor do pedido não pode ser negativo");
         }
 
@@ -24,16 +24,35 @@ public class PedidosService {
         return pedido;
 
     }
-    public List<Pedido> listarPedido(){
+
+    public List<Pedido> listarPedido() {
         return repository.listar();
     }
 
+    public void cancelarPedido(int id) {
 
-    public void atualizarStatus(int id, StatusPedido status){
         Pedido pedido = repository.buscarPedidoPorId(id);
-        if(pedido != null){
+
+        if (pedido == null) {
+            throw new RuntimeException("Pedido não localizado");
+        }
+        pedido.cancelar();
+
+    }
+
+    public List<Pedido> listarPedidoPorCliente (String cpf){
+
+        return repository.listar().stream()
+                .filter(pedido -> pedido.getCliente()
+                        .equals(cpf)).toList();
+    }
+
+
+    public void atualizarStatus(int id, StatusPedido status) {
+        Pedido pedido = repository.buscarPedidoPorId(id);
+        if (pedido != null) {
             pedido.atualizarStatus(status);
-        }else {
+        } else {
             System.out.println("Pedido não encontrado!");
         }
     }

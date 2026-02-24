@@ -1,11 +1,13 @@
 package com.borabordar;
 
 import com.borabordar.model.Cliente;
+import com.borabordar.model.Pedido;
 import com.borabordar.services.ClientService;
 import com.borabordar.services.PedidosService;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
+import java.util.List;
 import java.util.Scanner;
 
 public class BorabordarApplication {
@@ -33,6 +35,8 @@ public class BorabordarApplication {
 			System.out.println("2 - Listar Clientes");
 			System.out.println("3 - Criar pedido");
 			System.out.println("4 - Listar pedido");
+			System.out.println("5 - Cancelar pedido");
+			System.out.println("6 - Listar pedidos por cliente");
 			System.out.println("0 - Sair");
 
 			int opcao = sc.nextInt();
@@ -85,6 +89,38 @@ public class BorabordarApplication {
 						System.out.println("Erro: " + e.getMessage());
 					}
 
+					break;
+
+				case 4:
+					pedidosService.listarPedido().forEach(System.out::println);
+					break;
+
+				case 5:
+					try{
+						System.out.println("Informe o id do pedido");
+						int idCancelamento = sc.nextInt();
+						sc.nextLine();
+
+						pedidosService.cancelarPedido(idCancelamento);
+
+						System.out.println("Pedido cancelado com sucesso");
+					} catch (Exception e) {
+						System.out.println("Erro: "+ e.getMessage());
+					}
+					break;
+
+				case 6:
+					System.out.println("Informe o cpf do cliente");
+					String cpfBuscaPorPedidos = sc.nextLine();
+
+					List<Pedido> pedidoCliente = pedidosService.listarPedidoPorCliente(cpfBuscaPorPedidos);
+
+					if(pedidoCliente.isEmpty()){
+						System.out.println("Nenhum pedido foi encontardo para este clinte ");
+					}
+					else{
+						pedidoCliente.forEach(System.out::println);
+					}
 					break;
 
 				case 0:
