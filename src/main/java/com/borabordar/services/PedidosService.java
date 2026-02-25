@@ -1,5 +1,6 @@
 package com.borabordar.services;
 
+import com.borabordar.dto.RelatorioCliente;
 import com.borabordar.model.Cliente;
 import com.borabordar.model.Pedido;
 import com.borabordar.model.StatusPedido;
@@ -55,5 +56,37 @@ public class PedidosService {
         } else {
             System.out.println("Pedido não encontrado!");
         }
+    }
+
+    public RelatorioCliente gerarRelatorioPorCliente(String cpf){
+        List<Pedido> pedidos = listarPedidoPorCliente(cpf);
+
+        if(pedidos.isEmpty()){
+            System.out.println("Nenhum pedido foi encontrado");
+        }
+        int totalPedidos = pedidos.size();
+        int pendentes = 0;
+        int finalizados = 0;
+        int cancelados = 0;
+        double valorTotal = 0;
+
+        for (Pedido pedido : pedidos){
+            valorTotal += pedido.getValor();
+
+            switch (pedido.getStatus()){
+                case PENDENTE -> pendentes++;
+                case FINALIZADO -> finalizados++;
+                case CANCELADO -> cancelados++;
+                default -> {}
+            }
+        }
+        // Importei da DTO o objeto para alimentar o relatório
+       return new RelatorioCliente(
+               totalPedidos,
+               pendentes,
+               finalizados,
+               cancelados,
+               valorTotal
+       );
     }
 }

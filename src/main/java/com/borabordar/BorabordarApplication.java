@@ -1,5 +1,6 @@
 package com.borabordar;
 
+import com.borabordar.dto.RelatorioCliente;
 import com.borabordar.model.Cliente;
 import com.borabordar.model.Pedido;
 import com.borabordar.services.ClientService;
@@ -13,12 +14,10 @@ import java.util.Scanner;
 public class BorabordarApplication {
 
 	private final Scanner sc = new Scanner(System.in);
-	private final ClientService service = new ClientService();
 
 	private final PedidosService pedidosService = new PedidosService();
 
 	private final ClientService clientService = new ClientService();
-
 
 
 	public static void main(String[] args) {
@@ -37,6 +36,7 @@ public class BorabordarApplication {
 			System.out.println("4 - Listar pedido");
 			System.out.println("5 - Cancelar pedido");
 			System.out.println("6 - Listar pedidos por cliente");
+			System.out.println("7 - Relatorio completo do cliente");
 			System.out.println("0 - Sair");
 
 			int opcao = sc.nextInt();
@@ -54,7 +54,7 @@ public class BorabordarApplication {
 						System.out.print("CPF: ");
 						String cpf = sc.nextLine();
 
-						service.cadastrarCliente(nome, telefone, cpf);
+						clientService.cadastrarCliente(nome, telefone, cpf);
 						System.out.println("Cliente cadastrado com sucesso!");
 					} catch (Exception e) {
 						System.out.println("Erro: " + e.getMessage());
@@ -62,11 +62,10 @@ public class BorabordarApplication {
 					break;
 
 				case 2:
-					service.listarCliente().forEach(System.out::println);
+					clientService.listarCliente().forEach(System.out::println);
 					break;
 				case 3:
 					try {
-
 
 						System.out.println("CPF do cliente");
 						String cpfBusca = sc.nextLine();
@@ -96,7 +95,7 @@ public class BorabordarApplication {
 					break;
 
 				case 5:
-					try{
+					try {
 						System.out.println("Informe o id do pedido");
 						int idCancelamento = sc.nextInt();
 						sc.nextLine();
@@ -105,7 +104,7 @@ public class BorabordarApplication {
 
 						System.out.println("Pedido cancelado com sucesso");
 					} catch (Exception e) {
-						System.out.println("Erro: "+ e.getMessage());
+						System.out.println("Erro: " + e.getMessage());
 					}
 					break;
 
@@ -115,13 +114,34 @@ public class BorabordarApplication {
 
 					List<Pedido> pedidoCliente = pedidosService.listarPedidoPorCliente(cpfBuscaPorPedidos);
 
-					if(pedidoCliente.isEmpty()){
-						System.out.println("Nenhum pedido foi encontardo para este clinte ");
-					}
-					else{
+					if (pedidoCliente.isEmpty()) {
+						System.out.println("Nenhum pedido foi encontardo para este cliente ");
+					} else {
 						pedidoCliente.forEach(System.out::println);
 					}
 					break;
+
+				case 7:
+					System.out.println("Informe o CPF do cliente");
+					String cpgRelatorio = sc.nextLine();
+
+					RelatorioCliente relatorioCliente = pedidosService.gerarRelatorioPorCliente(cpgRelatorio);
+
+					if (relatorioCliente.getTotalPedidos() == 0) {
+						System.out.println("Nenhum pedido encontrado");
+						break;
+					}
+
+
+					System.out.println("======== Relatorio do client ========");
+					System.out.println();
+					System.out.println("Total pedidos: " + relatorioCliente.getTotalPedidos());
+					System.out.println("Total cancelados: " + relatorioCliente.getCancelados());
+					System.out.println("Total finalizados: " + relatorioCliente.getFinalizados());
+					System.out.println("Valor total gasto: " + relatorioCliente.getValorTotal());
+
+					break;
+
 
 				case 0:
 					System.out.println("Saindo...");
@@ -133,3 +153,8 @@ public class BorabordarApplication {
 		}
 	}
 }
+
+
+
+
+
