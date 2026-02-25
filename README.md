@@ -1,7 +1,7 @@
-README BORA BORDAR
- Bora Bordar — Sistema de Gestão de Pedidos
 
-Sistema backend desenvolvido em Java para gerenciamento de clientes e pedidos de uma empresa de bordados.
+ ## Bora Bordar — Sistema de Gestão de Pedidos
+
+#  backend desenvolvido em Java para gerenciamento de clientes e pedidos de uma empresa de bordados.
 
 O projeto foi construído com foco em:
 
